@@ -48,3 +48,29 @@
   + direct reads to cache. 
   + cache is simply a swap space.
   + cache is not updated like active memtable. queries are cached, and swapped in from disc.
+
+## Directory Structure
+```
+lib/
+├── core/
+│   ├── sstable.cpp
+│   ├── memtable.cpp
+│   ├── merge_log.cpp
+│   ├── compaction_manager.cpp
+│   ├── cache.cpp
+│   └── utils.cpp
+├── index/
+│   ├── node_data_index.cpp
+├── concurrency/
+│   ├── thread_pool.cpp
+│   └── lock_manager.cpp
+├── persistence/
+│   ├── flushing_manager.cpp
+│   └── durability_manager.cpp
+├── plugins/
+│   ├── plugin_interface.h
+│   └── example_plugin.cpp
+├── storage_engine.h
+├── storage_engine.cpp
+└── config.json
+```
