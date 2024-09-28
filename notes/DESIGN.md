@@ -43,3 +43,8 @@
   + merge SSTables, as a batch process. (to be detailed later)
   + all writes are flushed to buffer. 
     async batch buffer data to logs on disc.
+  + if a write happens to an active memtable. invalidate cache entry.
++ Reads
+  + direct reads to cache. 
+  + cache is simply a swap space.
+  + cache is not updated like active memtable. queries are cached, and swapped in from disc.
