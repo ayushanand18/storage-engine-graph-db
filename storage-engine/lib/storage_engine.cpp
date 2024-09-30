@@ -36,6 +36,15 @@ StorageEngine::~StorageEngine() {
     // ...
 }
 
-// Implement methods for interacting with the storage engine
+StorageEngine::StorageEngine(StorageEngine&& ) noexcept {
+    // move other moveable data members
+}
+
+StorageEngine::StorageEngine& operator=(StorageEngine&& other) noexcept {
+    if (this != &other) {
+        // move other moveable data members
+    }
+    return *this;
+}
 
 } // namespace storage_engine

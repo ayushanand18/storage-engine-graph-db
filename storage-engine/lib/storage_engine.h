@@ -11,12 +11,26 @@ public:
     StorageEngine();
     ~StorageEngine();
 
-    // Methods for interacting with the storage engine
-    // ... (define methods for CREATE, READ, UPDATE, DELETE operations)
+    // Can be only be moved but not copied
+    StorageEngine (StorageEngine&& );
+    StorageEngine& operator=(StorageEngine&&); 
+
+    StorageEngine(const MovStorageEngine&) = delete;
+    StorageEngine& operator=(const StorageEngine&) = delete;
+
+    std::string create_node(NodeData& );
+    std::string add_connection(
+        std::string /* from_node_id */, 
+        std::string /* to_node_id */
+        );
+    
+    NodeData get_node_data(std::string /* node_id */);
+    std::vector<std::string> get_connections_by_class(std::string /* node_class */);
 
 private:
-    // Internal data members and methods
-    // ... (define private members and methods)
+    std::vector<std::string> _match_nodeid_with_prefix(std::string /* prefix */);
+    std::vector<std::string> _get_connections(std::string /* node_id */);
+
 };
 
 } // namespace storage_engine
