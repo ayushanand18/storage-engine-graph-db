@@ -7,7 +7,6 @@
       "max_sstables": 10,
       "compaction_threshold": 10,
       "cache_size": 100000000,
-      "flush_interval": 10000,
-      "durability_level": "high"
+      "flush_interval": 10000
     }
 }
