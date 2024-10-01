@@ -1,31 +1,40 @@
 # Design Specs
 
-## Basic Objects 
+## Data Structures
+
 `Node`
 ```
 {
-    "data_pointer": "uuid_0x000fffe356",
-    "connection_list": SortedSet([
-        "node_class.node_id",
-        ...
-    ]),
+  "data_pointer": "uuid_0x000fffe356",
+  "connection_list": SortedSet([
+    "node_class.node_id",
     ...
+  ]),
+  ...
 }
 ```
 
 `Data Block` Table
 ```
 {
-    "uuid_0x...": "raw_data",
-    ...
+  "uuid_0x...": "raw_data",
+  ...
 }
 ```
 
 `Reads Cache`
 ```
 {
-    "node_class.node_id": "Node Object<>",
-    ...
+  "node_class.node_id": "Node Object<>",
+  ...
+}
+```
+
+`Node ID Index` helps track which nodes exist, to go away with cascaded deletetions
+```
+{
+  "node_class.node_id",
+  ...
 }
 ```
 
@@ -48,6 +57,7 @@
   + direct reads to cache. 
   + cache is simply a swap space.
   + cache is not updated like active memtable. queries are cached, and swapped in from disc.
+  + cache will only contain value dating back from old memt to disc. not active memt.
 
 ## Directory Structure
 ```

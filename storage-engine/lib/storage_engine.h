@@ -7,11 +7,22 @@ namespace storage_engine {
 
 class StorageEngine {
 public:
+    // TODO: functions supported (need to be implemented)
+
+    // CREATE a node
+    // ADD a connection between two nodes. it is a directed graph
+    // DELETE a connection between two nodes.
+    // DELETE a node
+    // GET data of the node
+    // TRAVERSE a node
+    // MATCH connection from 1 node, based on some condition
+    //   TRAVERSE is same as MATCH if condition is NULL
+
     // Constructor and destructor
     StorageEngine();
     ~StorageEngine();
 
-    // Can be only be moved but not copied
+    // can be only be moved but not copied
     StorageEngine (StorageEngine&& );
     StorageEngine& operator=(StorageEngine&&); 
 
@@ -23,10 +34,12 @@ public:
         std::string /* from_node_id */, 
         std::string /* to_node_id */
         );
-    
+    void delete_connection(std::string /* from_node_id */, std::string /* to_node_id */);
+    void delete_node(std::string /* node_id */);
     NodeData get_node_data(std::string /* node_id */);
-    std::vector<std::string> get_connections_by_class(std::string /* node_class */);
 
+    // throws std::invalid_argument
+    std::vector<std::string> match_connections(std::string /* node_id */, std::string /* condition */);
 private:
     // in the initial implementation we will have only 1 memtable which
     // shall be extended to multiple threads and multiple memtables each
@@ -39,7 +52,7 @@ private:
 
     // list of inactive memtables
     std::vector<Memtable> old_memtables_;
-    
+
     // a merge blog which shall have a buffer, all writes will be flushed to disc
     // from the buffer asynchronously. would be batched to be faster.
     MergeLog merge_log_;
@@ -48,8 +61,11 @@ private:
     // fetched during a read operation
     CompactionManager compaction_manager_;
 
-    // a csche to speedup reads
+    // a cache to speedup reads
     ObjectCache object_cache_;
+
+    // a node id index to contain all nodes that exist
+    NodeIDIndex node_id_index_ ;
 
     // an index from data pointers to raw data
     // this will be flushed to disc directly after a threshold
@@ -73,8 +89,13 @@ private:
     DurabilityManager durability_manager_;
 
     std::vector<std::string> _match_nodeid_with_prefix(std::string /* prefix */);
-    std::vector<std::string> _get_connections(std::string /* node_id */);
+    std::vector<std::string> _get_connections(std::string /* node_id */, std::string /* prefix_node */);
+    std::vector<std::string> _get_connections_from_cache(std::string /* node_id */, std::string /* prefix_node */, uint8_t /* cache_error */);
+    std::vector<std::string> _get_connections_from_active_memtable(std::string /* node_id */, std::string /* node_prefix */);
+    std::vector<std::string> _get_connections_from_old_memtables(std::string /* node_id */, std::string /* node_prefix */);
+    std::vector<std::string> _get_connections_from_sstables(std::string /* node_id */, std::string /* node_prefix */);
 
+    void _sanitize_prefix_for_node_id(std::string& /* prefix */) const;
 };
 
 } // namespace storage_engine
