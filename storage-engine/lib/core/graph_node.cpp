@@ -2,15 +2,25 @@
 //
 // Node Class Definitions for the storage engine.
 
+#include "core/uuid_generator.cpp"
+
 namespace storage_engine {
 
 class GraphNodeMeta {
+private:
     std::string data_pointer;
+    // TODO: replace this set with a RD_Black_Tree Implementation
+    //       which is also serializable
     std::set<std::string> connection_list;
 public:
     GraphNodeMeta() = default;
     ~GraphNodeMeta() = default;
-
+    void set_data_id(const std::string& data_id) {
+        this->data_pointer = data_id;
+    }
+    void add_connection(const std::string& to_node_id) {
+        this->connection_list.insert(to_node_id);
+    }
 };
 
 template <typename T>
@@ -19,19 +29,31 @@ class GraphNodeData {
     std::string node_id;
     std::string data_address_id;
 public:
-    GraphNodeData() = default;
+    GraphNodeData() const {
+        this->node_id = UUIDGenerator::generateUUID();
+    }
+    
+    GraphNodeData(const std::vector<unsigned char>& data) {
+        this->set_data(data);
+    }
+
     GraphNodeData(const T& obj) : data(serialize(obj)) {
+        this->node_id = UUIDGenerator::generateUUID();
         // TODO: Init few other data members
     }
     ~GraphNodeData() = default;
 
-    void set_data(std::string& serialized_data_as_string) const {
+    void set_data(const std::string& serialized_data_as_string) const {
         this->data = std::vector<unsigned char>(serialized_data_as_string.begin(), serialized_data_as_string.end());
     }
 
-    void set_data(std::vector<unsigned char>& serialized_data_as_bytes) noexcept {
+    void set_data(const std::vector<unsigned char>& serialized_data_as_bytes) noexcept {
         this->data.resize(serialized_data_as_bytes.size());
         std::copy(serialized_data_as_bytes.begin(), serialized_data_as_bytes.end(), this->data.begin());
+    }
+
+    std::string get_id() const noexcept {
+        return std::static_cast<std::string>(this->node_id);
     }
 
 private:
