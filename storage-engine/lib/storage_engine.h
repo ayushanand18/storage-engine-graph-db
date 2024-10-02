@@ -30,7 +30,7 @@ public:
     StorageEngine& operator=(const StorageEngine&) = delete;
 
     std::string create_node(NodeData& );
-    std::string add_connection(
+    void add_connection(
         std::string /* from_node_id */, 
         std::string /* to_node_id */
         );
@@ -95,6 +95,7 @@ private:
     std::vector<std::string> _get_connections_from_old_memtables(std::string /* node_id */, std::string /* node_prefix */);
     std::vector<std::string> _get_connections_from_sstables(std::string /* node_id */, std::string /* node_prefix */);
 
+    void _insert_connection(const std::string& /* from_node_id */, const std::string& /* to_node_id */, unsigned char /* flag_byte */);
     void _sanitize_prefix_for_node_id(std::string& /* prefix */) const;
 };
 

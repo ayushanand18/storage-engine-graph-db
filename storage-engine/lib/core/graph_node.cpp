@@ -10,16 +10,18 @@ class GraphNodeMeta {
 private:
     std::string data_pointer;
     // TODO: replace this set with a RD_Black_Tree Implementation
-    //       which is also serializable
-    std::set<std::string> connection_list;
+    //       which is also serializable.
+    //       a custom serializable class converted directly to bytes.
+
+    std::set<pair<std::string, unsigned char>> connection_list;
 public:
     GraphNodeMeta() = default;
     ~GraphNodeMeta() = default;
     void set_data_id(const std::string& data_id) {
         this->data_pointer = data_id;
     }
-    void add_connection(const std::string& to_node_id) {
-        this->connection_list.insert(to_node_id);
+    void add_connection(const std::string& to_node_id, flag_byte) {
+        this->connection_list.insert({to_node_id, flag_byte});
     }
 };
 

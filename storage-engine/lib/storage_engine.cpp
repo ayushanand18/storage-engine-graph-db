@@ -63,7 +63,15 @@ std::string StorageEngine::create_node(std::vector<unsigned char>& node_data) {
     merge_log_.add(new_node_id, meta_node);
 }
 
-std::string StorageEngine::add_connection(std::string from_node_id, std::string to_node_id) {
+void StorageEngine::add_connection(const std::string& from_node_id, const std::string& to_node_id) {
+    this->_insert_connection(from_node_id, to_node_id, '1');
+}
+
+void StorageEngine::delete_connection(const std::string& from_node_id, const std::string& to_node_id) {
+    this->_insert_connection(from_node_id, to_node_id, '0');
+}
+
+void StorageEngine::_insert_connection(const std::string& node_id, const std::string& to_node_id, unsigned char flag_byte) {
     GraphNodeMeta meta_node;
     // add a connection to the node_id
     meta_node.add_connection(to_node_id);
@@ -73,11 +81,7 @@ std::string StorageEngine::add_connection(std::string from_node_id, std::string 
     merge_log_.add(from_node_id, meta_node);
 }
 
-void StorageEngine::delete_connection(std::string from_node_id, std::string to_node_id) {
-    // TODO
-}
-
-void dStorageEngine::elete_node(std::string node_id) {
+void dStorageEngine::delete_node(std::string node_id) {
     // TODO
 }
 
