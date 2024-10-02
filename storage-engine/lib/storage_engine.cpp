@@ -1,14 +1,14 @@
 #include "storage_engine.h"
 
-#include "core/memtable.h"
-#include "core/merge_log.h"
-#include "core/compaction_manager.h"
-#include "core/cache.h"
-#include "index/node_data_index.h"
-#include "concurrency/thread_pool.h"
-#include "concurrency/lock_manager.h"
-#include "persistence/flushing_manager.h"
-#include "persistence/durability_manager.h"
+#include "core/memtable.cpp"
+#include "core/merge_log.cpp"
+#include "core/compaction_manager.cpp"
+#include "core/cache.cpp"
+#include "index/node_data_index.cpp"
+#include "concurrency/thread_pool.cpp"
+#include "concurrency/lock_manager.cpp"
+#include "persistence/flushing_manager.cpp"
+#include "persistence/durability_manager.cpp"
 
 namespace storage_engine {
 
@@ -32,7 +32,6 @@ StorageEngine::StorageEngine() {
 
 StorageEngine::~StorageEngine() {
     // TODO: Stop background threads and clean up resources
-    // ...
 }
 
 StorageEngine::StorageEngine(StorageEngine&& ) noexcept {
@@ -46,12 +45,32 @@ StorageEngine& operator=(StorageEngine&& other) noexcept {
     return *this;
 }
 
-std::string StorageEngine::create_node(NodeData& node_data) {
-    // TODO
+std::string StorageEngine::create_node(std::vector<unsigned char>& node_data) {
+    GraphNodeMeta meta_node;
+    std::string new_node_id = UUIDGenerator::generateUUID();
+
+    // first write data to data index
+    GraphNodeData data_node(node_data);
+    std::string new_node_data_id = data_node.get_id();
+    node_data_index_.insert(new_node_data_id, data_node);
+
+    meta_node.set_data_id(new_node_data_id);
+
+    // then push to active memtable
+    active_memtable_.insert(new_node_id, meta_node);
+
+    // add to merge log also
+    merge_log_.add(new_node_id, meta_node);
 }
 
 std::string StorageEngine::add_connection(std::string from_node_id, std::string to_node_id) {
-    // TODO
+    GraphNodeMeta meta_node;
+    // add a connection to the node_id
+    meta_node.add_connection(to_node_id);
+    // insert this node to active memtable
+    active_memtable_.insert(from_node_id, meta_node);
+
+    merge_log_.add(from_node_id, meta_node);
 }
 
 void StorageEngine::delete_connection(std::string from_node_id, std::string to_node_id) {
@@ -101,11 +120,8 @@ std::vector<std::string> _get_connections(std::string node_id, std::string node_
     // ERROR 1 means cache miss
     // ERROR 2 means stale entry in cache. 
     // remove entry from cache and update
-    
-    
+        
 }
-
-
 
 
 } // namespace storage_engine
