@@ -95,7 +95,7 @@ private:
     std::vector<std::string> _get_connections_from_active_memtable(std::string /* node_id */, std::string /* node_prefix */);
     std::vector<std::string> _get_connections_from_old_memtables(std::string /* node_id */, std::string /* node_prefix */);
     std::vector<std::string> _get_connections_from_sstables(std::string /* node_id */, std::string /* node_prefix */);
-    std::string _create_node(GraphNodeData<void*>& );
+    std::string _create_node(const GraphNodeData<void*>& );
 
     void _insert_connection(const std::string& /* from_node_id */, const std::string& /* to_node_id */, unsigned char /* flag_byte */);
     void _sanitize_prefix_for_node_id(std::string& /* prefix */) const;
