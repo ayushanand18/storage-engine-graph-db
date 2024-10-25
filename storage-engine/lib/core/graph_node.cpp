@@ -4,6 +4,9 @@
 
 #include "core/uuid_generator.cpp"
 
+#include <set>
+#include <utility>
+
 namespace storage_engine {
 
 class GraphNodeMeta {
@@ -13,14 +16,14 @@ private:
     //       which is also serializable.
     //       a custom serializable class converted directly to bytes.
 
-    std::set<pair<std::string, unsigned char>> connection_list;
+    std::set<std::pair<std::string, unsigned char>> connection_list;
 public:
     GraphNodeMeta() = default;
     ~GraphNodeMeta() = default;
     void set_data_id(const std::string& data_id) {
         this->data_pointer = data_id;
     }
-    void add_connection(const std::string& to_node_id, flag_byte) {
+    void add_connection(const std::string& to_node_id, unsigned char flag_byte) {
         this->connection_list.insert({to_node_id, flag_byte});
     }
 };

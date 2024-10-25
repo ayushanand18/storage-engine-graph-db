@@ -6,6 +6,14 @@ namespace storage_engine {
 
 // TODO: CompactionManager class definition and implementation
 class CompactionManager {
+public:
+    void run() {
+        // Implement the compaction process
+    }
+
+    CompactionManager* get() {
+        return this;
+    }
 
 };
 

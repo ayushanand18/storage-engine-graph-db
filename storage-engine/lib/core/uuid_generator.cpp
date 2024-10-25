@@ -1,3 +1,8 @@
+// core/uuid_generator.cpp
+//
+// Generate UUIDs for the storage engine.
+
+#include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/random/mersenne_twister.hpp>
@@ -6,20 +11,18 @@ namespace storage_engine {
 
 class UUIDGenerator {
 public:
-    static boost::uuids::uuid generateUUID() \noexcept {
-        // Create a Mersenne Twister random number generator
-        boost::random::mt19937 rng;
 
-        // Seed the random number generator with a time-based seed for better randomness
-        boost::random::seed_seq seed{static_cast<unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
-        rng.seed(seed);
-
-        // Create a UUID generator using the Mersenne Twister random number generator
-        boost::uuids::random_generator<boost::random::mt19937> uuid_generator(rng);
+    static std::string generateUUID() noexcept {
+        // Create a UUID generator
+        boost::uuids::random_generator uuid_generator;
 
         // Generate a UUID
-        return uuid_generator();
+        boost::uuids::uuid uuid = uuid_generator();
+
+        // Convert UUID to string and return
+        return boost::lexical_cast<std::string>(uuid);
     }
+
 };
 
 }

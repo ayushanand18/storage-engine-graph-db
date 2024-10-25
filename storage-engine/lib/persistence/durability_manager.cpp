@@ -5,5 +5,8 @@
 namespace storage_engine {
 
 // TODO: DurabilityManager class definition and implementation
+class DurabilityManager {
+
+};
 
 } // namespace storage_engine
