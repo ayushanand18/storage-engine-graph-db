@@ -81,7 +81,7 @@ void StorageEngine::_insert_connection(const std::string& node_id, const std::st
     merge_log_.add(from_node_id, meta_node);
 }
 
-void dStorageEngine::delete_node(std::string node_id) {
+void StorageEngine::delete_node(std::string node_id) {
     // TODO
 }
 

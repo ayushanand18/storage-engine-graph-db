@@ -7,5 +7,8 @@
 namespace storage_engine {
 
 // TODO: LockManager class definition and implementation
+class LockManager {
+
+};
 
 } // namespace storage_engine

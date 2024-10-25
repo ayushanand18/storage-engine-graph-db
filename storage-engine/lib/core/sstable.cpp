@@ -5,5 +5,8 @@
 namespace storage_engine {
 
 // TODO: SSTable class definition and implementation
+class SSTable {
+
+};
 
 } // namespace storage_engine

@@ -5,5 +5,8 @@
 namespace storage_engine {
 
 // TODO: ThreadPool class definition and implementation
+class ThreadPool {
+
+};
 
 } // namespace storage_engine

@@ -5,5 +5,8 @@
 namespace storage_engine {
 
 // TODO: NodeDataIndex class definition and implementation
+class NodeDataIndex {
+
+};
 
 } // namespace storage_engine

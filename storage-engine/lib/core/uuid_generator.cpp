@@ -6,7 +6,7 @@ namespace storage_engine {
 
 class UUIDGenerator {
 public:
-    static boost::uuids::uuid generateUUID() {
+    static boost::uuids::uuid generateUUID() \noexcept {
         // Create a Mersenne Twister random number generator
         boost::random::mt19937 rng;
 

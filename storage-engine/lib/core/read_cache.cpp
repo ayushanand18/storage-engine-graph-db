@@ -5,5 +5,8 @@
 namespace storage_engine {
 
 // TODO: Cache class definition and implementation
+class Cache {
+
+};
 
 } // namespace storage_engine

@@ -4,13 +4,17 @@
 
 namespace storage_engine {
 
+// TODO: Memtable class definition and implementation
+
 class Memtable {
 public:
     std::ostream& serialize();
     void deserialize(std::istream& in);
-    
-}
 
-// TODO: Memtable class definition and implementation
+    // this must be a sync operation
+    void insert(std::string new_node_id, GraphNodeMeta& meta_node);
+
+    
+};
 
 } // namespace storage_engine
