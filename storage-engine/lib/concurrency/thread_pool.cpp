@@ -11,6 +11,9 @@ public:
         // TODO: implement execution and return a Future
     }
 
+    void cancelAllTasks() {
+        // TODO: this function needs to be thread-safe
+    }
 };
 
 } // namespace storage_engine

@@ -2,53 +2,67 @@
 //
 // Node Class Definitions for the storage engine.
 
-#include "core/uuid_generator.cpp"
-
 #include <set>
 #include <utility>
+#include <vector>
+#include <string>
+#include <stdexcept>
+#include <sstream>
+#include <type_traits>
 
 namespace storage_engine {
 
 class GraphNodeMeta {
 private:
     std::string data_pointer;
-    // TODO: replace this set with a RD_Black_Tree Implementation
-    //       which is also serializable.
-    //       a custom serializable class converted directly to bytes.
-
+    // Replace this set with a RD_Black_Tree Implementation
+    // which is also serializable.
     std::set<std::pair<std::string, unsigned char>> connection_list;
+
 public:
     GraphNodeMeta() = default;
     ~GraphNodeMeta() = default;
+
     void set_data_id(const std::string& data_id) {
         this->data_pointer = data_id;
     }
+
     void add_connection(const std::string& to_node_id, unsigned char flag_byte) {
         this->connection_list.insert({to_node_id, flag_byte});
+    }
+
+    const std::set<std::pair<std::string, unsigned char>>& get_connections() const {
+        return connection_list;
+    }
+
+    std::string get_data_id() const {
+        return data_pointer;
     }
 };
 
 template <typename T>
 class GraphNodeData {
-    std::vector<unsigned char> data;
-    std::string node_id;
-    std::string data_address_id;
+private:
+    std::vector<unsigned char> data; // Serialized data
+    std::string node_id; // Unique identifier for the node
+    std::string data_address_id; // Address ID for the associated data
+
 public:
-    GraphNodeData() const {
-        this->node_id = UUIDGenerator::generateUUID();
-    }
-    
-    GraphNodeData(const std::vector<unsigned char>& data) {
+    GraphNodeData() : node_id(UUIDGenerator::generateUUID()) {}
+
+    GraphNodeData(const std::vector<unsigned char>& data) : node_id(UUIDGenerator::generateUUID()) {
         this->set_data(data);
     }
 
-    GraphNodeData(const T& obj) : data(serialize(obj)) {
-        this->node_id = UUIDGenerator::generateUUID();
-        // TODO: Init few other data members
+    GraphNodeData(const T& obj) : node_id(UUIDGenerator::generateUUID()) {
+        this->data = serialize(obj);
+        // Initialize other data members if necessary
+        this->data_address_id = ""; // Placeholder for future use or implementation
     }
+
     ~GraphNodeData() = default;
 
-    void set_data(const std::string& serialized_data_as_string) const {
+    void set_data(const std::string& serialized_data_as_string) {
         this->data = std::vector<unsigned char>(serialized_data_as_string.begin(), serialized_data_as_string.end());
     }
 
@@ -58,13 +72,11 @@ public:
     }
 
     std::string get_id() const noexcept {
-        return std::static_cast<std::string>(this->node_id);
+        return node_id;
     }
 
 private:
-    std::string data;
-
-    static std::string serialize(const T& obj) {
+    static std::vector<unsigned char> serialize(const T& obj) {
         std::stringstream ss;
 
         // Handle different data types
@@ -75,11 +87,10 @@ private:
         } else if constexpr (std::is_same_v<T, double>) {
             ss << obj;
         } else {
-            // Handle other data types or throw an exception
             throw std::runtime_error("Unsupported data type: " + typeid(obj).name());
         }
 
-        return ss.str();
+        return std::vector<unsigned char>(ss.str().begin(), ss.str().end());
     }
 };
 

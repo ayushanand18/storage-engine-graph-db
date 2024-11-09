@@ -2,6 +2,26 @@
 #define STORAGE_ENGINE_H
 
 
+#include "concurrency/thread_pool.cpp"
+#include "concurrency/lock_manager.cpp"
+#include "core/compaction_manager.cpp"
+#include "core/graph_node.cpp"
+#include "core/memtable.cpp"
+#include "core/merge_log.cpp"
+#include "core/object_cache.cpp"
+#include "core/sstable.cpp"
+#include "core/utils.cpp"
+#include "core/uuid_generator.cpp"
+#include "index/node_data_index.cpp"
+#include "index/node_id_index.cpp"
+#include "persistence/flushing_manager.cpp"
+#include "persistence/durability_manager.cpp"
+
+#include <memory>
+#include <string>
+#include <vector>
+
+
 namespace storage_engine {
 
 class StorageEngine {
@@ -87,6 +107,9 @@ private:
 
     // handles merge logs and writing it to disc
     std::unique_ptr<DurabilityManager> durability_manager_;
+
+    // wether this object is active (ready receiving reads/writes) or not
+    bool is_active;
 
     std::vector<std::string> _get_all_connections(const std::string& /* node_id */);
     std::vector<std::string> _match_nodeid_with_prefix(std::string /* prefix */);
