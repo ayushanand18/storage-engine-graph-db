@@ -2,6 +2,8 @@
 //
 // Implementation of ThreadPool for the storage engine.
 
+#include <functional>
+
 namespace storage_engine {
 
 // TODO: ThreadPool class definition and implementation

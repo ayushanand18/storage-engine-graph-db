@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <type_traits>
+#include "storage_engine.h"
 
 namespace storage_engine {
 
