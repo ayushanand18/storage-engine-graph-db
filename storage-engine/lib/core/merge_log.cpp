@@ -2,18 +2,25 @@
 //
 // Implementation of MergeLog (sequential log of writes) for the storage engine.
 
+#include "core/merge_log.h"
+
 namespace storage_engine {
 
-// TODO: MergeLog class definition and implementation
-class MergeLog {
-public:
-    std::ostream& serialize();
-    void deserialize(std::istream& in);
+std::ostream& MergeLog::serialize() {
+    // Placeholder for serialization logic, just returning std::cout for now
+    return std::cout;
+}
 
-    // needs to be a async operation but gauranteed to be in order of arrival
-    void add(std::string new_node_id, GraphNodeMeta& meta_node);
+void MergeLog::deserialize(std::istream& in) {
+    // Placeholder for deserialization logic
+}
 
-    void toDisc();
-};
+void MergeLog::add(const std::string& new_node_id, GraphNodeMeta& meta_node) {
+    // Placeholder for adding a new node to the log
+}
+
+void MergeLog::toDisc() {
+    // Placeholder for writing the log to disk
+}
 
 } // namespace storage_engine

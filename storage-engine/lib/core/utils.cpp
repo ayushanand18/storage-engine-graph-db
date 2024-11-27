@@ -2,12 +2,11 @@
 //
 // Utility functions for the storage engine.
 
+#include "core/utils.h"
+
 namespace storage_engine {
 
-// TODO: Utility function implementations
-class Util {
-
-};
-
+// Utility class implementation can be added here as needed
+Util::Util() = default;
 
 } // namespace storage_engine

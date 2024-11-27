@@ -1,21 +1,23 @@
+#pragma once
+
 #ifndef STORAGE_ENGINE_H
 #define STORAGE_ENGINE_H
 
 
-#include "concurrency/thread_pool.cpp"
-#include "concurrency/lock_manager.cpp"
-#include "core/compaction_manager.cpp"
-#include "core/graph_node.cpp"
-#include "core/memtable.cpp"
-#include "core/merge_log.cpp"
-#include "core/object_cache.cpp"
-#include "core/sstable.cpp"
-#include "core/utils.cpp"
-#include "core/uuid_generator.cpp"
-#include "index/node_data_index.cpp"
-#include "index/node_id_index.cpp"
-#include "persistence/flushing_manager.cpp"
-#include "persistence/durability_manager.cpp"
+#include "concurrency/thread_pool.h"
+#include "concurrency/lock_manager.h"
+#include "core/compaction_manager.h"
+#include "core/graph_node.h"
+#include "core/memtable.h"
+#include "core/merge_log.h"
+#include "core/object_cache.h"
+#include "core/sstable.h"
+#include "core/utils.h"
+#include "core/uuid_generator.h"
+#include "index/node_data_index.h"
+#include "index/node_id_index.h"
+#include "persistence/flushing_manager.h"
+#include "persistence/durability_manager.h"
 
 #include <memory>
 #include <string>
@@ -60,6 +62,11 @@ public:
 
     // throws std::invalid_argument
     std::vector<std::string> match_connections(std::string /* node_id */, std::string /* condition */);
+
+    bool isActive();
+    size_t getActiveMemtableSize();
+    void triggerCompaction();
+    void triggerFlush();
 private:
     // in the initial implementation we will have only 1 memtable which
     // shall be extended to multiple threads and multiple memtables each
@@ -114,7 +121,7 @@ private:
     std::vector<std::string> _get_all_connections(const std::string& /* node_id */);
     std::vector<std::string> _match_nodeid_with_prefix(std::string /* prefix */);
     std::vector<std::string> _get_connections(const std::string& /* node_id */, const std::string& /* prefix_node */);
-    std::vector<std::string> _get_connections_from_cache(const std::string& /* node_id */, const std::string& /* prefix_node */, uint8_t /* cache_error */);
+    std::vector<std::string> _get_connections_from_cache(const std::string& /* node_id */, const std::string& /* prefix_node */, uint8_t& /* cache_error */);
     std::vector<std::string> _get_connections_from_active_memtable(std::string /* node_id */, std::string /* node_prefix */);
     std::vector<std::string> _get_connections_from_old_memtables(std::string /* node_id */, std::string /* node_prefix */);
     std::vector<std::string> _get_connections_from_sstables(std::string /* node_id */, std::string /* node_prefix */);

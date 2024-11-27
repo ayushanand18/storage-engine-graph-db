@@ -51,7 +51,7 @@ StorageEngine::~StorageEngine() {
 }
 
 // Keeping existing move operations
-StorageEngine::StorageEngine(StorageEngine&& other) noexcept 
+StorageEngine::StorageEngine(StorageEngine&& other) 
     : active_memtable_(std::move(other.active_memtable_))
     , old_memtables_(std::move(other.old_memtables_))
     , merge_log_(std::move(other.merge_log_))
@@ -66,7 +66,7 @@ StorageEngine::StorageEngine(StorageEngine&& other) noexcept
     , is_active(other.is_active) {
 }
 
-StorageEngine& StorageEngine::operator=(StorageEngine&& other) noexcept {
+StorageEngine& StorageEngine::operator=(StorageEngine&& other) {
     if (this != &other) {
         active_memtable_ = std::move(other.active_memtable_);
         old_memtables_ = std::move(other.old_memtables_);
@@ -78,7 +78,7 @@ StorageEngine& StorageEngine::operator=(StorageEngine&& other) noexcept {
         thread_pool_ = std::move(other.thread_pool_);
         lock_manager_ = std::move(other.lock_manager_);
         flushing_manager_ = std::move(other.flushing_manager_);
-        durability_manager_ = std::move(other.durability_manager_);
+        compaction_manager_ = std::move(other.compaction_manager_);
         is_active = other.is_active;
     }
     return *this;
@@ -200,7 +200,7 @@ GraphNodeData<void*> StorageEngine::get_node_data(const std::string& node_id) {
     }
     
     // Check SSTable through compaction manager
-    return compaction_manager_->getNodeData(node_id);
+    return GraphNodeData<void*>(compaction_manager_->getNodeData(node_id));
 }
 
 std::vector<std::string> StorageEngine::match_connections(const std::string node_id, std::string condition) {
@@ -247,7 +247,6 @@ std::vector<std::string> StorageEngine::_get_all_connections(const std::string& 
     
     all_connections.assign(unique_connections.begin(), unique_connections.end());
     
-    // Cache the result
     object_cache_->put(node_id + "_connections", all_connections);
     
     return all_connections;
@@ -308,7 +307,8 @@ std::vector<std::string> StorageEngine::_get_connections_from_old_memtables(
 
 std::vector<std::string> StorageEngine::_get_connections_from_sstables(
     std::string node_id, std::string node_prefix) {
-    return compaction_manager_->getConnections(node_id, node_prefix);
+    // return compaction_manager_->getConnections(node_id, node_prefix);
+    return {};
 }
 
 std::vector<std::string> StorageEngine::_get_connections_from_cache(
@@ -320,7 +320,7 @@ std::vector<std::string> StorageEngine::_get_connections_from_cache(
     
     auto cached_data = object_cache_->get(cache_key, cache_error);
     if (cache_error == 0) {
-        return cached_data.get_connections();
+        // return cached_data.get_connections();
     }
     
     return std::vector<std::string>();
@@ -343,11 +343,11 @@ void StorageEngine::_sanitize_prefix_for_node_id(std::string& prefix) const {
 }
 
 // New utility methods
-bool StorageEngine::isActive() const noexcept {
+bool StorageEngine::isActive() {
     return is_active;
 }
 
-size_t StorageEngine::getActiveMemtableSize() const {
+size_t StorageEngine::getActiveMemtableSize() {
     return active_memtable_->size();
 }
 

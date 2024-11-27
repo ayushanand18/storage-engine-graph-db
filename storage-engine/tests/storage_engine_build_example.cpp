@@ -3,9 +3,9 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
-#include "storage_engine.h"
+#include "storage_engine.cpp"
 
-using namespace storage_engine;
+// using namespace storage_engine;
 
 std::string generate_random_string(size_t length) {
     const char characters[] = "abcdefghijklmnopqrstuvwxyz";
@@ -20,7 +20,7 @@ std::string generate_random_string(size_t length) {
 }
 
 int main() {
-    StorageEngine engine;
+    storage_engine::StorageEngine engine;
 
     const int num_nodes = 10000;
     const int num_connections = 10000;
@@ -33,7 +33,7 @@ int main() {
         std::vector<unsigned char> node_data(generate_random_string(10).begin(), generate_random_string(10).end());
 
         auto start = std::chrono::high_resolution_clock::now();
-        engine.create_node(node_data);
+        engine.create_node(node_data);  // Ensure create_node implementation
         auto end = std::chrono::high_resolution_clock::now();
 
         node_creation_times.push_back(end - start);
@@ -41,11 +41,11 @@ int main() {
 
     // Generate and insert connections
     for (int i = 0; i < num_connections; ++i) {
-        std::string from_node_id = generate_random_string(10);
+        std::string from_node_id = generate_random_string(10);  // Ensure proper node ID generation
         std::string to_node_id = generate_random_string(10);
 
         auto start = std::chrono::high_resolution_clock::now();
-        engine.add_connection(from_node_id, to_node_id);
+        engine.add_connection(from_node_id, to_node_id);  // Ensure add_connection implementation
         auto end = std::chrono::high_resolution_clock::now();
 
         connection_creation_times.push_back(end - start);
