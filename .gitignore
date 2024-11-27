@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# make
+# make.cpp
+# storage_engine_build_example
